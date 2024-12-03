@@ -10,7 +10,7 @@ SSI (Solana Signed Instruction) enables secure cross-chain instruction execution
 
 ## Universal Compatibility
 
-Any wallet capable of secp256k1 signatures can be used with SSI.
+Any wallet capable of secp256k1 signatures can be used with SSI, with out of the box support for any EVM blockchain.
 
 ## Reference Implementation
 
