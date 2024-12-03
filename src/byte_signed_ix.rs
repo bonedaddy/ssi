@@ -77,7 +77,6 @@ impl SignedInstruction for ByteSignedIx {
 #[cfg(test)]
 mod test {
     use borsh::{BorshDeserialize, BorshSerialize};
-    use rand::thread_rng;
 
     use crate::signed_message::WalletType;
 

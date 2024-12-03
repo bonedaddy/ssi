@@ -3,16 +3,8 @@ pub mod invoke_authenticated_cpi;
 /// provides the instruction used to create an auth user account
 pub mod register_auth_user;
 
-use solana_program::{
-    instruction::{AccountMeta, Instruction},
-    log::sol_log as log,
-    program_error::ProgramError,
-    program_option::COption,
-    pubkey::Pubkey,
-    sysvar,
-};
+use solana_program::{log::sol_log as log, program_error::ProgramError};
 use std::convert::TryInto;
-use std::mem::size_of;
 
 use crate::{
     byte_signed_ix::ByteSignedIx,
@@ -221,6 +213,8 @@ impl Into<ByteSignedIx> for &ProxyAuthIx {
 
 #[cfg(test)]
 mod test {
+    use solana_sdk::pubkey::Pubkey;
+
     use super::*;
     #[test]
     fn test_register_auth_user_pack_unpack() {

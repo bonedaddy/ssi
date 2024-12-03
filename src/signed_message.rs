@@ -1,15 +1,9 @@
 use libsecp256k1::{RecoveryId, Signature};
-use solana_program::{pubkey::Pubkey, secp256k1_recover::Secp256k1Pubkey};
+use solana_program::secp256k1_recover::Secp256k1Pubkey;
 
-use crate::{
-    error::SSIError,
-    utils::{construct_eth_pubkey, serialize_raw},
-};
+use crate::{error::SSIError, utils::construct_eth_pubkey};
 
-use {
-    borsh::{BorshDeserialize, BorshSerialize},
-    sha3::Digest,
-};
+use borsh::{BorshDeserialize, BorshSerialize};
 
 /// special garbage data added to eth keys to occupy 32 bytes
 pub const ETH_KEY_GARBAGE: [u8; 12] = [6, 9, 4, 2, 0, 1, 3, 3, 7, 6, 6, 6];
@@ -215,7 +209,7 @@ impl Default for SignedMessage {
 
 #[cfg(test)]
 mod test {
-    use crate::utils::convert_recovered_public_key;
+    use crate::utils::{convert_recovered_public_key, serialize_raw};
 
     use super::*;
 

@@ -3,33 +3,27 @@ use crate::{
     proxy_auth,
     signed_message::{SignedInstruction, SignedMessageOpts, WalletType},
 };
-use borsh::BorshSerialize;
-use libsecp256k1::{sign, Message, PublicKey, SecretKey};
+use libsecp256k1::{PublicKey, SecretKey};
 use proxy_auth::processor::process_instruction;
-use rand::{rngs::OsRng, thread_rng};
-use sha3::{Digest, Keccak256};
-use solana_program::{system_instruction, system_program, sysvar};
+use rand::thread_rng;
+use solana_program::system_program;
 use {
-    solana_program::{
-        instruction::{AccountMeta, Instruction},
-        pubkey::Pubkey,
-    },
+    solana_program::instruction::Instruction,
     solana_program_test::*,
     solana_sdk::{signature::Signer, transaction::Transaction},
-    std::str::FromStr,
 };
 // this will panic because wormhole isn't properly forked into the localnet environment
 #[tokio::test]
 async fn test_register_auth_user() {
     let mut rng = thread_rng();
 
-    let mut pt = ProgramTest::new(
+    let pt = ProgramTest::new(
         "proxy_auth",
         proxy_auth::id(),
         processor!(process_instruction),
     );
 
-    let (mut banks_client, payer, recent_blockhash) = pt.start().await;
+    let (banks_client, payer, _) = pt.start().await;
     // Generate a random secret key
     let secret_key = SecretKey::random(&mut rng);
     let pub_key = PublicKey::from_secret_key(&secret_key);
@@ -66,7 +60,7 @@ async fn test_register_auth_user() {
         })
         .unwrap();
     if let proxy_auth::instructions::ProxyAuthIx::RegisterAuthUser {
-        ix_data,
+        ix_data: _,
         signed_message,
     } = &mut proxy_auth_ix
     {
