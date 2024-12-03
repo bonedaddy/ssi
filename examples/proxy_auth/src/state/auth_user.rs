@@ -5,7 +5,7 @@ use solana_program::{
     pubkey::Pubkey,
 };
 
-use crate::signed_message::WalletType;
+use ssi::signed_message::WalletType;
 
 #[repr(C)]
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -27,13 +27,13 @@ impl AuthUser {
         b"auth_user"
     }
     pub fn derive(signing_key: [u8; 32]) -> (Pubkey, u8) {
-        Pubkey::find_program_address(&[Self::seed(), &signing_key[..]], &crate::proxy_auth::id())
+        Pubkey::find_program_address(&[Self::seed(), &signing_key[..]], &crate::ID)
     }
     /// creates a pda address given the signign key and nonce
     pub fn create_pda(signing_key: [u8; 32], nonce: u8) -> Pubkey {
         Pubkey::create_program_address(
             &[Self::seed(), &signing_key[..], &[nonce]],
-            &crate::proxy_auth::id(),
+            &crate::ID,
         )
         .unwrap()
     }

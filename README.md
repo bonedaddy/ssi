@@ -14,4 +14,4 @@ Any wallet capable of secp256k1 signatures can be used with SSI, with out of the
 
 ## Reference Implementation
 
-[ByteSignedIx](./src/byte_signed_ix.rs) is a reference implementation of the SSI specification. An example program using SSI for user authentication is located in [proxy_auth](./src/proxy_auth/mod.rs).
+[ByteSignedIx](./src/byte_signed_ix.rs) is a reference implementation of the SSI specification. An example program using SSI for user authentication is located in [proxy_auth](./examples/proxy_auth/lib.rs).

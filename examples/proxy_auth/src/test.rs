@@ -1,10 +1,9 @@
-use crate::{
+use ssi::{
     byte_signed_ix::ByteSignedIx,
-    proxy_auth,
     signed_message::{SignedInstruction, SignedMessageOpts, WalletType},
 };
 use libsecp256k1::{PublicKey, SecretKey};
-use proxy_auth::processor::process_instruction;
+use crate::processor::process_instruction;
 use rand::thread_rng;
 use solana_program::system_program;
 use {
@@ -19,7 +18,7 @@ async fn test_register_auth_user() {
 
     let pt = ProgramTest::new(
         "proxy_auth",
-        proxy_auth::id(),
+        crate::id(),
         processor!(process_instruction),
     );
 
@@ -27,17 +26,17 @@ async fn test_register_auth_user() {
     // Generate a random secret key
     let secret_key = SecretKey::random(&mut rng);
     let pub_key = PublicKey::from_secret_key(&secret_key);
-    let eth_pub_key = crate::utils::construct_eth_pubkey(&pub_key);
-    let eth_pub_key_padded = crate::utils::pad_eth_pubkey(eth_pub_key);
+    let eth_pub_key = ssi::utils::construct_eth_pubkey(&pub_key);
+    let eth_pub_key_padded = ssi::utils::pad_eth_pubkey(eth_pub_key);
 
     let pub_key_serialized = pub_key.serialize();
     let mut public_key: [u8; 64] = [0_u8; 64];
     public_key.copy_from_slice(&pub_key_serialized[1..]);
 
-    let (pda, nonce) = proxy_auth::state::auth_user::AuthUser::derive(eth_pub_key_padded);
+    let (pda, nonce) = crate::state::auth_user::AuthUser::derive(eth_pub_key_padded);
 
-    let mut proxy_auth_ix = proxy_auth::instructions::ProxyAuthIx::RegisterAuthUser {
-        ix_data: proxy_auth::instructions::RegisterAuthUserIx {
+    let mut proxy_auth_ix = crate::instructions::ProxyAuthIx::RegisterAuthUser {
+        ix_data: crate::instructions::RegisterAuthUserIx {
             nonce,
             wallet_type: WalletType::Ethereum,
         },
@@ -45,7 +44,7 @@ async fn test_register_auth_user() {
         signed_message: Default::default(),
     };
     let byte_signed_ix: ByteSignedIx = (&proxy_auth_ix).into();
-    let ix_accounts = proxy_auth::instructions::register_auth_user::RegisterAuthUserAccountMeta {
+    let ix_accounts = crate::instructions::register_auth_user::RegisterAuthUserAccountMeta {
         fee_payer: payer.pubkey(),
         auth_user: pda,
         system_program: system_program::id(),
@@ -59,7 +58,7 @@ async fn test_register_auth_user() {
             pub_key,
         })
         .unwrap();
-    if let proxy_auth::instructions::ProxyAuthIx::RegisterAuthUser {
+    if let crate::instructions::ProxyAuthIx::RegisterAuthUser {
         ix_data: _,
         signed_message,
     } = &mut proxy_auth_ix
@@ -70,7 +69,7 @@ async fn test_register_auth_user() {
     };
     let mut transaction = Transaction::new_with_payer(
         &[Instruction::new_with_bytes(
-            proxy_auth::id(),
+            crate::ID,
             &proxy_auth_ix.pack(),
             ix_accounts.to_account_metas(),
         )],

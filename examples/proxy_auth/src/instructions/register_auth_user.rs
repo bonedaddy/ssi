@@ -1,8 +1,7 @@
-use crate::{
+use ssi::{
     byte_signed_ix::ByteSignedIx,
     error::SSIError,
-    proxy_auth::state::auth_user::AuthUser,
-    signed_message::{SignedInstruction, WalletInfo},
+    signed_message::{SignedInstruction, WalletInfo, WalletType},
     utils::serialize_raw,
 };
 use solana_program::{
@@ -17,9 +16,11 @@ use solana_program::{
     system_instruction,
     sysvar::Sysvar,
 };
+use crate::{
+    state::auth_user::AuthUser,
+    instructions::ProxyAuthIx
+};
 
-use super::ProxyAuthIx;
-use crate::signed_message::WalletType;
 
 pub struct RegisterAuthUserAccountMeta {
     pub fee_payer: Pubkey,
@@ -72,7 +73,7 @@ pub fn handle_register_auth_user(
     // extract the signer key
     let recovered_signer = byte_signed_ix.recover_signer(signed_message)?;
     // convert the signer key into a public key
-    let recovered_signer = crate::utils::convert_recovered_public_key(recovered_signer)?;
+    let recovered_signer = ssi::utils::convert_recovered_public_key(recovered_signer)?;
 
     // based on the specified wallet type, ensure the signatures match up
     match ix_data.wallet_type {
@@ -105,7 +106,7 @@ pub fn handle_register_auth_user(
             auth_user.key,
             lamports,
             AuthUser::size() as u64,
-            &crate::proxy_auth::id(),
+            &crate::ID,
         ),
         &[fee_payer.clone(), auth_user.clone()],
         &[&[

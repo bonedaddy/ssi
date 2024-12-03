@@ -1,10 +1,14 @@
-use crate::{
+use ssi::{
     byte_signed_ix::ByteSignedIx,
     error::SSIError,
-    proxy_auth::state::auth_user::AuthUser,
-    signed_message::{SignedInstruction, SignedInstructionSerializoor, WalletInfo},
+    signed_message::{WalletType, SignedInstruction, SignedInstructionSerializoor, WalletInfo},
     utils::serialize_raw,
 };
+use crate::{
+    state::auth_user::AuthUser,
+    instructions::ProxyAuthIx,
+};
+
 use solana_program::{
     account_info::AccountInfo,
     instruction::{AccountMeta, Instruction},
@@ -14,8 +18,6 @@ use solana_program::{
     program_pack::Pack,
 };
 
-use super::ProxyAuthIx;
-use crate::signed_message::WalletType;
 
 /// handlers register the authenticated user
 ///
@@ -38,7 +40,7 @@ pub fn handle_invoke_authenticated_cpi(
 
     let auth_user = accounts.get(1).unwrap();
     // ensure we own this user account
-    if auth_user.owner.ne(&crate::proxy_auth::id()) {
+    if auth_user.owner.ne(&crate::ID) {
         return Err(ProgramError::IllegalOwner);
     }
 
@@ -60,7 +62,7 @@ pub fn handle_invoke_authenticated_cpi(
         // extract the signer key
         let recovered_signer = byte_signed_ix.recover_signer(signed_message)?;
         // convert the signer key into a public key
-        let recovered_signer = crate::utils::convert_recovered_public_key(recovered_signer)?;
+        let recovered_signer = ssi::utils::convert_recovered_public_key(recovered_signer)?;
 
         // based on the specified wallet type, ensure the signatures match up
         match auth_user_info.wallet_type {

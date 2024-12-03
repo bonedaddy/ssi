@@ -7,7 +7,3 @@ pub mod error;
 pub mod signed_message;
 /// utilities for working with ssi format
 pub mod utils;
-
-/// module providing authenticated proxy program
-#[cfg(feature = "proxy-auth")]
-pub mod proxy_auth;

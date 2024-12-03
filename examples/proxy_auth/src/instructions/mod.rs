@@ -6,7 +6,7 @@ pub mod register_auth_user;
 use solana_program::{log::sol_log as log, program_error::ProgramError};
 use std::convert::TryInto;
 
-use crate::{
+use ssi::{
     byte_signed_ix::ByteSignedIx,
     signed_message::{SignedInstructionSerializoor, SignedMessage, WalletType},
 };
