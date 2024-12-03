@@ -22,7 +22,7 @@ pub trait SignedInstruction: SignedInstructionSerializoor {
     /// 1) encode (serialize -> hash)
     /// 2) sign hashed message
     /// 3) return signature
-    /// 
+    ///
     /// to convert the signature into the format accepted by the SSI standard, call: `signature.serialize()`
     /// to convert the recoveryId into the format accepted by the SSI stadanrd, call `recovery_id.serialize()`
     fn sign(&self, key: libsecp256k1::SecretKey) -> Result<(Signature, RecoveryId), SSIError>;
@@ -61,7 +61,7 @@ pub struct SignedMessageOpts {
 }
 
 #[repr(C)]
-#[derive(Clone, Copy, Debug, PartialEq, BorshSerialize, BorshDeserialize,)]
+#[derive(Clone, Copy, Debug, PartialEq, BorshSerialize, BorshDeserialize)]
 pub struct SignedMessage {
     /// this is the signature which was returned from signing the message_hash
     pub signature: [u8; 64],
@@ -208,7 +208,7 @@ impl Default for SignedMessage {
             signature: [0_u8; 64],
             message_hash: [0_u8; 32],
             wallet_pubkey: [0_u8; 32],
-            recovery_id: 0
+            recovery_id: 0,
         }
     }
 }

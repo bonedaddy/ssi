@@ -3,19 +3,21 @@ pub mod invoke_authenticated_cpi;
 /// provides the instruction used to create an auth user account
 pub mod register_auth_user;
 
-
 use solana_program::{
     instruction::{AccountMeta, Instruction},
+    log::sol_log as log,
     program_error::ProgramError,
     program_option::COption,
     pubkey::Pubkey,
     sysvar,
-    log::sol_log as log
 };
 use std::convert::TryInto;
 use std::mem::size_of;
 
-use crate::{signed_message::{SignedInstructionSerializoor, SignedMessage, WalletType}, byte_signed_ix::ByteSignedIx};
+use crate::{
+    byte_signed_ix::ByteSignedIx,
+    signed_message::{SignedInstructionSerializoor, SignedMessage, WalletType},
+};
 
 /// Instructions supported by the proxy auth program
 ///
@@ -83,7 +85,6 @@ impl SignedInstructionSerializoor for ProxyAuthIx {
         }
     }
 }
-
 
 impl ProxyAuthIx {
     pub fn unpack(input: &[u8]) -> Result<Self, ProgramError> {
@@ -210,10 +211,11 @@ impl ProxyAuthIx {
     }
 }
 
-
 impl Into<ByteSignedIx> for &ProxyAuthIx {
     fn into(self) -> ByteSignedIx {
-        ByteSignedIx { instruction: Box::new(self.clone()) }
+        ByteSignedIx {
+            instruction: Box::new(self.clone()),
+        }
     }
 }
 

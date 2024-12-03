@@ -8,14 +8,16 @@ use crate::{
 use solana_program::{
     account_info::AccountInfo,
     entrypoint::ProgramResult,
+    instruction::AccountMeta,
     log::sol_log as log,
     program::invoke_signed,
     program_error::ProgramError,
     program_pack::{IsInitialized, Pack},
+    pubkey::Pubkey,
     rent::Rent,
     secp256k1_recover::Secp256k1RecoverError,
     system_instruction,
-    sysvar::Sysvar, instruction::AccountMeta, pubkey::Pubkey,
+    sysvar::Sysvar,
 };
 
 use super::ProxyAuthIx;
@@ -24,7 +26,7 @@ use crate::signed_message::WalletType;
 pub struct RegisterAuthUserAccountMeta {
     pub fee_payer: Pubkey,
     pub auth_user: Pubkey,
-    pub system_program: Pubkey
+    pub system_program: Pubkey,
 }
 
 impl RegisterAuthUserAccountMeta {
