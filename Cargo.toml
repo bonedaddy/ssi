@@ -1,0 +1,46 @@
+[package]
+name = "ssi"
+version = "0.1.0"
+edition = "2021"
+description = "SSI is a specification for cross-chain gasless solana transactions and user authorization"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[features]
+default = ["proxy-auth"]
+proxy-auth = ["arrayref"]
+no-entrypoint = []
+
+[dependencies.solana-program]
+version = "2"
+[dependencies.borsh]
+version = "0.10"
+[dependencies.sha3]
+version = "0.10"
+[dependencies.libsecp256k1]
+version = "0.7.0"
+[dependencies.thiserror]
+version = "1"
+[dependencies.arrayref]
+version = "0.3.7"
+optional = true
+
+[dev-dependencies.solana-program-test]
+version = "2"
+[dev-dependencies.solana-sdk]
+version = "2"
+[dev-dependencies.rand]
+version = "0.8"
+[dev-dependencies.rand_core]
+version = "0.6"
+[dev-dependencies.hex]
+version = "0.4"
+[dev-dependencies.tokio]
+version = "1"
+features = ["full", "parking_lot"]
+
+[profile.release]
+opt-level = 3
+incremental = false
+codegen-units = 1
+lto = "fat"
